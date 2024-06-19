@@ -4,7 +4,6 @@ using PluginConfig.API;
 using PluginConfig.API.Fields;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -15,13 +14,6 @@ namespace HandPaint.Scripts
     {
         [PrefabAsset("assets/ui/coloralphafield.prefab")]
         private static GameObject fieldPrefab;
-
-        private static TMP_FontAsset font;
-
-        static ColorAlphaField()
-        {
-            font = Addressables.LoadAssetAsync<TMP_FontAsset>("Assets/Fonts/VCR_OSD_MONO_1.asset").WaitForCompletion();
-        }
 
         private readonly Color _defaultValue;
         private ConfigColorAlphaField _currentUi;
@@ -52,7 +44,7 @@ namespace HandPaint.Scripts
         {
             if (onValueChange == null)
                 return;
-            var data = new ColorField.ColorValueChangeEvent()
+            var data = new ColorField.ColorValueChangeEvent
             {
                 value = _value
             };
@@ -149,9 +141,7 @@ namespace HandPaint.Scripts
             Utils.AddScrollEvents(_currentUi.alphaInput.gameObject.AddComponent<EventTrigger>(), componentInParent);
             field.SetActive(!hidden);
             SetInteractableColor(interactable);
-            foreach (var text in content.GetComponentsInChildren<TextMeshProUGUI>(true))
-                text.font = font;
-            
+
             return field;
         }
 

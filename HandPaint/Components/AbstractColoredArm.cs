@@ -1,3 +1,4 @@
+using System;
 using HandPaint.Scripts;
 using PluginConfig.API.Fields;
 using UnityEngine;
@@ -20,14 +21,65 @@ namespace HandPaint.Components
 
         private readonly ColorField.ColorValueChangeEventDelegate[] _colorHandlers =
             new ColorField.ColorValueChangeEventDelegate[3];
+        
+        private bool _skittlesPoxActive;
+        private Color _skittlesPoxValue = new Color(1, 0, 0, 1);
+        
+        private SkittlesPox _skittlesPox;
 
         protected void Start()
         {
+            _skittlesPox = SkittlesPox.Instance;
             MaterialBlock = new MaterialPropertyBlock();
             CustomColorsShader = Addressables
                 .LoadAssetAsync<Shader>("Assets/Shaders/Special/ULTRAKILL-vertexlit-customcolors-emissive.shader")
                 .WaitForCompletion();
 
+            BindHandlers();
+            HandPaintConfig.EnableRepaint.onValueChange += v =>
+            {
+                if (v.value)
+                    Repaint();
+                else
+                    RestoreVanillaMaterials();
+            };
+        }
+
+        private void FixedUpdate()
+        {
+            if (!_skittlesPox.activated)
+            {
+                if (!_skittlesPoxActive)
+                    return;
+
+                _skittlesPoxActive = false;
+                BindHandlers();
+                return;
+            }
+
+            if (!_skittlesPoxActive)
+            {
+                UnbindHandlers();
+                _skittlesPoxActive = true;
+                return;
+            }
+            
+            for (var i = 0; i < 3; i++)
+            {
+                var hue = (_skittlesPox.hue +
+                          Time.fixedDeltaTime * HandPaintConfig.EasterEggConfig.Frequency.value / 60 +
+                          HandPaintConfig.EasterEggConfig.Phases[i].value) % 1f;
+
+                _skittlesPoxValue = Color.HSVToRGB(hue, 1, 1);
+                MaterialBlock.SetColor(ColorProperties[i], _skittlesPoxValue);
+                SetPropertyBlock();
+            }
+            float end = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        }
+
+        protected void BindHandlers()
+        {
+            var fields = ColorFields();
             for (var i = 0; i < 3; i++)
             {
                 var num = i;
@@ -36,19 +88,16 @@ namespace HandPaint.Components
                     MaterialBlock.SetColor(ColorProperties[num], v.value);
                     SetPropertyBlock();
                 };
-                ColorFields()[i].onValueChange += _colorHandlers[i];
+                fields[i].onValueChange += _colorHandlers[i];
+                fields[i].TriggerValueChangeEvent();
             }
-
-            foreach (var field in ColorFields())
-                field.TriggerValueChangeEvent();
-
-            ConfigFields.EnableRepaint.onValueChange += v =>
-            {
-                if (v.value)
-                    Repaint();
-                else
-                    RestoreVanillaMaterials();
-            };
+        }
+        
+        protected void UnbindHandlers()
+        {
+            var fields = ColorFields();
+            for (var i = 0; i < fields.Length; i++)
+                fields[i].onValueChange -= _colorHandlers[i];
         }
 
         protected abstract void RestoreVanillaMaterials();
@@ -59,10 +108,6 @@ namespace HandPaint.Components
 
         protected abstract void SetPropertyBlock();
 
-        protected void OnDestroy()
-        {
-            for (var i = 0; i < 3; i++)
-                ColorFields()[i].onValueChange -= _colorHandlers[i];
-        }
+        protected virtual void OnDestroy() => UnbindHandlers();
     }
 }

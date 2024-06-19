@@ -1,12 +1,12 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace HandPaint.Scripts
 {
     public class ConfigColorAlphaField : MonoBehaviour
     {
+        [SerializeField]
         public TextMeshProUGUI nameText;
         public Image image;
         public Image metallicPreview;

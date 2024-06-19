@@ -28,7 +28,7 @@ namespace HandPaint.Components
             MaterialBlock.SetTexture(IdTex, _mask);
             MaterialBlock.SetTexture(Cube, _cube);
             SetPropertyBlock();
-            ConfigFields.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -49,6 +49,6 @@ namespace HandPaint.Components
         
         protected override void SetPropertyBlock() => _armRenderer.SetPropertyBlock(MaterialBlock);
 
-        protected override ColorAlphaField[] ColorFields() => ConfigFields.FeedbackerColors;
+        protected override ColorAlphaField[] ColorFields() => HandPaintConfig.FeedbackerColors;
     }
 }

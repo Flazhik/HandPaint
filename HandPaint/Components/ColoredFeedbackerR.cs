@@ -1,4 +1,5 @@
 using HandPaint.Scripts;
+using PluginConfig.API.Fields;
 using UnityEngine;
 
 namespace HandPaint.Components
@@ -15,10 +16,12 @@ namespace HandPaint.Components
         private Material _originalMaterial;
 
         private SkinnedMeshRenderer _armRenderer;
+        private ColorAlphaField[] _colorFields;
 
         private new void Start()
         {
             _armRenderer = transform.GetComponent<SkinnedMeshRenderer>();
+            _colorFields = HandPaintConfig.FeedbackerColors;
             base.Start();
 
             _originalMaterial = Instantiate(_armRenderer.material);
@@ -28,7 +31,18 @@ namespace HandPaint.Components
             MaterialBlock.SetTexture(IdTex, _mask);
             MaterialBlock.SetTexture(Cube, _cube);
             SetPropertyBlock();
-            ConfigFields.EnableRepaint.TriggerValueChangeEvent();
+
+            HandPaintConfig.PaintFeedbackerSeparately.onValueChange += OnSeparatePaint;
+            HandPaintConfig.PaintFeedbackerSeparately.TriggerValueChangeEvent();
+            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+        }
+        
+        public void OnSeparatePaint(BoolField.BoolValueChangeEvent v) {
+            UnbindHandlers();
+            _colorFields = v.value
+                ? HandPaintConfig.RightFeedbackerColors
+                : HandPaintConfig.FeedbackerColors;
+            BindHandlers();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -47,8 +61,20 @@ namespace HandPaint.Components
             _armRenderer.material = _coloredMaterial;
         }
         
-        protected override void SetPropertyBlock() => _armRenderer.SetPropertyBlock(MaterialBlock);
+        protected override void SetPropertyBlock()
+        {
+            _armRenderer.SetPropertyBlock(MaterialBlock);
+        }
 
-        protected override ColorAlphaField[] ColorFields() => ConfigFields.FeedbackerColors;
+        protected override ColorAlphaField[] ColorFields()
+        {
+            return _colorFields;
+        }
+        
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            HandPaintConfig.PaintFeedbackerSeparately.onValueChange -= OnSeparatePaint;
+        }
     }
 }

@@ -47,9 +47,9 @@ namespace HandPaint.Components
             _shellRenderer.material.SetTexture(IdTex, _shellMask);
             SetPropertyBlock();
 
-            ConfigFields.KnuckleblasterShellColorField.onValueChange += OnShellColor;
-            ConfigFields.KnuckleblasterShellColorField.TriggerValueChangeEvent();
-            ConfigFields.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.KnuckleblasterShellColorField.onValueChange += OnShellColor;
+            HandPaintConfig.KnuckleblasterShellColorField.TriggerValueChangeEvent();
+            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -73,13 +73,13 @@ namespace HandPaint.Components
         public void OnShellColor(ColorField.ColorValueChangeEvent e) => _shellRenderer.material.SetColor(ColorProperties[0], e.value);
         
         protected override void SetPropertyBlock() => _armRenderer.SetPropertyBlock(MaterialBlock);
+
+        protected override ColorAlphaField[] ColorFields() => HandPaintConfig.KnuckleblasterColors;
         
-        protected new void OnDestroy()
+        protected override void OnDestroy()
         {
             base.OnDestroy();
-            ConfigFields.KnuckleblasterShellColorField.onValueChange -= OnShellColor;
+            HandPaintConfig.KnuckleblasterShellColorField.onValueChange -= OnShellColor;
         }
-        
-        protected override ColorAlphaField[] ColorFields() => ConfigFields.KnuckleblasterColors;
     }
 }

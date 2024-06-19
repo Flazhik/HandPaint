@@ -39,9 +39,9 @@ namespace HandPaint.Components
             MaterialBlock.SetTexture(Cube, _cube);
             SetPropertyBlock();
 
-            ConfigFields.WhiplashRopeColorField.onValueChange += OnRopeColor;
-            ConfigFields.WhiplashRopeColorField.TriggerValueChangeEvent();
-            ConfigFields.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.WhiplashRopeColorField.onValueChange += OnRopeColor;
+            HandPaintConfig.WhiplashRopeColorField.TriggerValueChangeEvent();
+            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -62,8 +62,8 @@ namespace HandPaint.Components
 
             _armRenderer.material = _coloredMaterial;
             _hookRenderer.material = _coloredMaterial;
-            _ropeRenderer.startColor = ConfigFields.WhiplashRopeColorField.Value;
-            _ropeRenderer.endColor = ConfigFields.WhiplashRopeColorField.Value;
+            _ropeRenderer.startColor = HandPaintConfig.WhiplashRopeColorField.Value;
+            _ropeRenderer.endColor = HandPaintConfig.WhiplashRopeColorField.Value;
         }
 
         public void OnRopeColor(ColorField.ColorValueChangeEvent e)
@@ -78,12 +78,12 @@ namespace HandPaint.Components
             _hookRenderer.SetPropertyBlock(MaterialBlock);
         }
 
-        protected new void OnDestroy()
+        protected override void OnDestroy()
         {
             base.OnDestroy();
-            ConfigFields.WhiplashRopeColorField.onValueChange -= OnRopeColor;
+            HandPaintConfig.WhiplashRopeColorField.onValueChange -= OnRopeColor;
         }
 
-        protected override ColorAlphaField[] ColorFields() => ConfigFields.WhiplashColors;
+        protected override ColorAlphaField[] ColorFields() => HandPaintConfig.WhiplashColors;
     }
 }
