@@ -41,7 +41,7 @@ namespace HandPaint.Components
 
             HandPaintConfig.WhiplashRopeColorField.onValueChange += OnRopeColor;
             HandPaintConfig.WhiplashRopeColorField.TriggerValueChangeEvent();
-            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.RepaintWhiplash.TriggerValueChangeEvent();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -83,6 +83,8 @@ namespace HandPaint.Components
             base.OnDestroy();
             HandPaintConfig.WhiplashRopeColorField.onValueChange -= OnRopeColor;
         }
+        
+        protected override BoolField EnableRepaintingField() => HandPaintConfig.RepaintWhiplash;
 
         protected override ColorAlphaField[] ColorFields() => HandPaintConfig.WhiplashColors;
     }

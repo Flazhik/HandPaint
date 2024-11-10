@@ -34,7 +34,7 @@ namespace HandPaint.Components
 
             HandPaintConfig.PaintFeedbackerSeparately.onValueChange += OnSeparatePaint;
             HandPaintConfig.PaintFeedbackerSeparately.TriggerValueChangeEvent();
-            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.RepaintFeedbacker.TriggerValueChangeEvent();
         }
         
         public void OnSeparatePaint(BoolField.BoolValueChangeEvent v) {
@@ -65,6 +65,8 @@ namespace HandPaint.Components
         {
             _armRenderer.SetPropertyBlock(MaterialBlock);
         }
+        
+        protected override BoolField EnableRepaintingField() => HandPaintConfig.RepaintFeedbacker;
 
         protected override ColorAlphaField[] ColorFields()
         {

@@ -1,4 +1,3 @@
-using System;
 using HandPaint.Scripts;
 using PluginConfig.API.Fields;
 using UnityEngine;
@@ -36,7 +35,7 @@ namespace HandPaint.Components
                 .WaitForCompletion();
 
             BindHandlers();
-            HandPaintConfig.EnableRepaint.onValueChange += v =>
+            EnableRepaintingField().onValueChange += v =>
             {
                 if (v.value)
                     Repaint();
@@ -74,7 +73,6 @@ namespace HandPaint.Components
                 MaterialBlock.SetColor(ColorProperties[i], _skittlesPoxValue);
                 SetPropertyBlock();
             }
-            float end = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
         protected void BindHandlers()
@@ -104,6 +102,8 @@ namespace HandPaint.Components
 
         protected abstract void Repaint();
 
+        protected abstract BoolField EnableRepaintingField();
+        
         protected abstract ColorAlphaField[] ColorFields();
 
         protected abstract void SetPropertyBlock();

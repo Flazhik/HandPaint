@@ -1,4 +1,5 @@
 using HandPaint.Scripts;
+using PluginConfig.API.Fields;
 using UnityEngine;
 
 namespace HandPaint.Components
@@ -28,7 +29,7 @@ namespace HandPaint.Components
             MaterialBlock.SetTexture(IdTex, _mask);
             MaterialBlock.SetTexture(Cube, _cube);
             SetPropertyBlock();
-            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.RepaintFeedbacker.TriggerValueChangeEvent();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -49,6 +50,8 @@ namespace HandPaint.Components
         
         protected override void SetPropertyBlock() => _armRenderer.SetPropertyBlock(MaterialBlock);
 
+        protected override BoolField EnableRepaintingField() => HandPaintConfig.RepaintFeedbacker;
+        
         protected override ColorAlphaField[] ColorFields() => HandPaintConfig.FeedbackerColors;
     }
 }

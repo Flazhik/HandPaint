@@ -49,7 +49,7 @@ namespace HandPaint.Components
 
             HandPaintConfig.KnuckleblasterShellColorField.onValueChange += OnShellColor;
             HandPaintConfig.KnuckleblasterShellColorField.TriggerValueChangeEvent();
-            HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+            HandPaintConfig.RepaintKnuckleblaster.TriggerValueChangeEvent();
         }
         
         protected override void RestoreVanillaMaterials()
@@ -74,8 +74,10 @@ namespace HandPaint.Components
         
         protected override void SetPropertyBlock() => _armRenderer.SetPropertyBlock(MaterialBlock);
 
-        protected override ColorAlphaField[] ColorFields() => HandPaintConfig.KnuckleblasterColors;
+        protected override BoolField EnableRepaintingField() => HandPaintConfig.RepaintKnuckleblaster;
         
+        protected override ColorAlphaField[] ColorFields() => HandPaintConfig.KnuckleblasterColors;
+
         protected override void OnDestroy()
         {
             base.OnDestroy();

@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace HandPaint.Components
 {
+    [ConfigureSingleton(SingletonFlags.PersistAutoInstance)]
     public class SkittlesPox: MonoSingleton<SkittlesPox>
     {
         private static readonly List<string> Tantrums = new List<string>
@@ -43,7 +44,7 @@ namespace HandPaint.Components
             SceneManager.sceneLoaded += (s, m) =>
             {
                 activated = false;
-                HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+                HandPaintConfig.TriggerValueChangeEvent();
             };
 
             yield return StartCoroutine(WaitForTheKeyboard());
@@ -58,7 +59,7 @@ namespace HandPaint.Components
 
         private void Update()
         {
-            if (!HandPaintConfig.EnableRepaint.value || Keyboard.current == null || !Keyboard.current.anyKey.wasPressedThisFrame)
+            if (Keyboard.current == null || !Keyboard.current.anyKey.wasPressedThisFrame)
                 return;
 
             if (_easterSequence != null && _easterSequence[_sequenceIndex].wasPressedThisFrame)
@@ -73,7 +74,7 @@ namespace HandPaint.Components
                     if (_tantrumIndex == 0)
                     {
                         activated = true;
-                        HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+                        HandPaintConfig.TriggerValueChangeEvent();
                     }
                     DisplayMessage(Tantrums[_tantrumIndex]);
                     _tantrumIndex++;
@@ -81,7 +82,7 @@ namespace HandPaint.Components
                 else
                 {
                     activated = false;
-                    HandPaintConfig.EnableRepaint.TriggerValueChangeEvent();
+                    HandPaintConfig.TriggerValueChangeEvent();
                     DisplayMessage("Fine, FINE! IT'S OFF! HAPPY NOW?!\nGET LOST!!!");
                     _tantrumIndex = 0;
                 }
@@ -92,6 +93,9 @@ namespace HandPaint.Components
 
         private void FixedUpdate()
         {
+            if (!activated)
+                return;
+            
             hue = (hue + Time.fixedDeltaTime * HandPaintConfig.EasterEggConfig.Frequency.value / 60f) % 1f;
         }
         
