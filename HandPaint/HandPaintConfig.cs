@@ -126,7 +126,7 @@ namespace HandPaint
         {
             RepaintFeedbacker.TriggerValueChangeEvent();
             RepaintKnuckleblaster.TriggerValueChangeEvent();
-            RepaintKnuckleblaster.TriggerValueChangeEvent();
+            RepaintWhiplash.TriggerValueChangeEvent();
         }
 
         private static bool SkittlePoxIsActive() => SkittlesPox.Instance.activated;

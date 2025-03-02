@@ -6,7 +6,7 @@ namespace HandPaint.Components
 {
     public class ColoredFeedbackerR: AbstractColoredArm
     {
-        [PrefabAsset("assets/textures/feedbacker_mask.png")]
+        [PrefabAsset("assets/textures/feedbacker_r_mask.png")]
         private static Texture _mask;        
         
         [PrefabAsset("assets/textures/cube.png")]
